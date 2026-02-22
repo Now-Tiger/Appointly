@@ -24,7 +24,8 @@ const soria = localfont({
 export const metadata: Metadata = {
   title: "Appointy App",
   description: "Appointments Handled",
-  // icons: { icon: "./neko.png" },
+  icons: { icon: "./icon.png" },
+
 };
 
 export default function RootLayout({
