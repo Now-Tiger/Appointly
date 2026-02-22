@@ -1,12 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Transition } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, User, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { JSX } from "react";
 
-const appointments = [
+type AppointmentStatus = "confirmed" | "pending" | "cancelled";
+
+type Appointment = {
+  id: number;
+  customer: string;
+  service: string;
+  time: string;
+  date: Date;
+  status: AppointmentStatus;
+};
+
+const appointments: Appointment[] = [
   {
     id: 1,
     customer: "Rahul Sharma",
@@ -49,18 +61,25 @@ const appointments = [
   },
 ];
 
-const statusColors = {
+const statusColors: Record<AppointmentStatus, string> = {
   confirmed: "bg-[#4A7C59] text-white",
   pending: "bg-[#F5F5F3] text-[#0B0B0B] border border-[#0B0B0B]/20",
   cancelled: "bg-red-100 text-red-800",
 };
 
-export default function UpcomingAppointments() {
+const easeCurve: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
+
+const baseTransition: Transition = {
+  duration: 0.4,
+  ease: easeCurve,
+};
+
+export default function UpcomingAppointments(): JSX.Element {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ ...baseTransition, delay: 0.4 }}
     >
       <Card className="border border-[#0B0B0B]/10 p-6">
         <div className="mb-6">
@@ -71,13 +90,17 @@ export default function UpcomingAppointments() {
             Upcoming Appointments
           </h3>
         </div>
+
         <div className="space-y-3">
           {appointments.map((apt, index) => (
             <motion.div
               key={apt.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.5 + index * 0.05 }}
+              transition={{
+                duration: 0.3,
+                delay: 0.5 + index * 0.05,
+              }}
               className="border border-[#0B0B0B]/10 rounded-lg p-4 hover:bg-[#F5F5F3]/50 transition-all duration-200 cursor-pointer group"
             >
               <div className="flex items-start justify-between mb-3">
@@ -85,20 +108,28 @@ export default function UpcomingAppointments() {
                   <div className="w-10 h-10 rounded-full bg-[#0B0B0B]/5 flex items-center justify-center group-hover:bg-[#0B0B0B] transition-all duration-200">
                     <User className="w-5 h-5 text-[#0B0B0B]/60 group-hover:text-white transition-colors duration-200" />
                   </div>
+
                   <div>
-                    <p className="font-semibold text-[#0B0B0B] text-sm">{apt.customer}</p>
+                    <p className="font-semibold text-[#0B0B0B] text-sm">
+                      {apt.customer}
+                    </p>
                     <p className="text-xs text-[#0B0B0B]/50">{apt.service}</p>
                   </div>
                 </div>
-                <Badge className={`${statusColors[apt.status]} text-xs px-2 py-1`}>
+
+                <Badge
+                  className={`${statusColors[apt.status]} text-xs px-2 py-1`}
+                >
                   {apt.status}
                 </Badge>
               </div>
+
               <div className="flex items-center gap-4 text-xs text-[#0B0B0B]/50">
                 <div className="flex items-center gap-1.5">
                   <Clock size={14} />
                   <span>{apt.time}</span>
                 </div>
+
                 <div className="flex items-center gap-1.5">
                   <Calendar size={14} />
                   <span>{format(apt.date, "MMM d, yyyy")}</span>
