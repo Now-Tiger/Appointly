@@ -1,7 +1,7 @@
 "use client";
 
-import  Link  from "next/link";
-import { ArrowLeft, Calendar, DollarSign, Users, TrendingUp } from "lucide-react";
+import {Calendar, DollarSign, Users, TrendingUp } from "lucide-react";
+import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
 import MetricCard from "@/components/dashboard/MetricCard";
 import RevenueChart from "@/components/dashboard/RevenueChart";
 import BookingsTrendChart from "@/components/dashboard/BookingsTrendChart";
@@ -11,36 +11,19 @@ import QuickActions from "@/components/dashboard/QuickActions";
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#F5F5F3]" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Header */}
-      <div className="bg-white border-b border-[#0B0B0B]/10">
-        <div className="max-w-400 mx-auto px-6 md:px-12 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                href={"/"}
-                className="text-[#0B0B0B]/60 hover:text-[#0B0B0B] transition-colors duration-200"
-              >
-                <ArrowLeft size={20} />
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-[#0B0B0B] tracking-tight">
-                  Dashboard
-                </h1>
-                <p className="text-sm text-[#0B0B0B]/50 mt-0.5">
-                  Welcome back, Admin
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#4A7C59] animate-pulse" />
-              <span className="text-xs text-[#0B0B0B]/50">All systems operational</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <DashboardNavbar />
       {/* Main Content */}
-      <div className="max-w-400 mx-auto px-6 md:px-12 py-8">
+      <div className="pl-28 pr-6 md:pr-12 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-[#0B0B0B] tracking-tight">
+            Dashboard
+          </h1>
+          <p className="text-sm text-[#0B0B0B]/50 mt-1">
+            Welcome back, Admin
+          </p>
+        </div>
+
         {/* Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
