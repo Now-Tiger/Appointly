@@ -1,10 +1,27 @@
 "use client";
 
+import Link from "next/link";
+
 const footerLinks = {
-  Product: ["Features", "Pricing", "Integrations", "Changelog"],
+  Product: ["Features", "Pricing", "About", "Changelog"],
   Company: ["About", "Blog", "Careers", "Contact"],
   Legal: ["Privacy", "Terms", "Security"],
 };
+
+// const footerItemsWithLinks = [
+//   { category: "Product", label: "Features", page: "/#features" },
+//   { category: "Product", label: "Pricing", page: "/#pricing" },
+//   { category: "Product", label: "Integrations", page: "/" },
+// 
+//   { category: "Company", label: "About", page: "/about" },
+//   { category: "Company", label: "Blog", page: "/" },
+//   { category: "Company", label: "Careers", page: "/" },
+//   { category: "Company", label: "Contact", page: "/" },
+// 
+//   { category: "Legal", label: "Privacy", page: "/" },
+//   { category: "Legal", label: "Terms", page: "/" },
+//   { category: "Legal", label: "Security", page: "/" },
+// ];
 
 export default function Footer() {
   return (
@@ -30,12 +47,12 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link}>
-                    <a
-                      href="#"
+                    <Link
+                      href={link.toLowerCase()}
                       className="text-white/50 text-sm hover:text-white transition-colors duration-200"
                     >
                       {link}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

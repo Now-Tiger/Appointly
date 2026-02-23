@@ -76,7 +76,7 @@ export default function HeroSection() {
       </div>
 
       {/* Thin bottom divider */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-[#0B0B0B]/10" />
+      <div className="absolute bottom-0 left-5 right-5 md:left-13 md:right-13 h-px bg-[#0B0B0B]/10" />
     </section>
   );
 }
