@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Loader2, ArrowLeft, Mail } from "lucide-react";
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
+import { getResetPasswordUrl } from "@/lib/app-url";
 import { slideUp } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +33,7 @@ export default function ForgotPasswordPage() {
       const supabase = getSupabaseBrowserClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(
         email,
-        { redirectTo: `${window.location.origin}/reset-password` }
+        { redirectTo: getResetPasswordUrl() }
       );
 
       if (resetError) {
@@ -68,7 +69,7 @@ export default function ForgotPasswordPage() {
     try {
       const supabase = getSupabaseBrowserClient();
       await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: getResetPasswordUrl(),
       });
       startCooldown();
     } catch {

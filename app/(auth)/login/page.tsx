@@ -8,6 +8,7 @@ import { Loader2, Eye, EyeOff, Mail } from "lucide-react";
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { handleGoogleLogin } from "@/lib/google-oauth/login";
+import { getAuthCallbackUrl } from "@/lib/app-url";
 import { slideUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -156,7 +157,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+            emailRedirectTo: getAuthCallbackUrl(),
             data: {
               full_name: fullName,
               business_name: businessName,
