@@ -1,10 +1,11 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
+import { getAuthCallbackUrl } from "@/lib/app-url";
 
 export async function handleGoogleLogin() {
   console.log("[GoogleAuth] Starting Google OAuth flow...");
 
   const supabase = getSupabaseBrowserClient();
-  const redirectTo = `${window.location.origin}/api/auth/callback`;
+  const redirectTo = getAuthCallbackUrl();
   console.log("[GoogleAuth] Redirect URL:", redirectTo);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
