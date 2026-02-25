@@ -19,7 +19,7 @@ const fadeUp: Variants = {
 export default function CTASection(): JSX.Element {
   return (
     <section id="contact" className="relative bg-[#0B0B0B] overflow-hidden">
-      <DotGrid dark />
+      <DotGrid dark fadeBottom />
 
       <div className="relative z-10 max-w-350 mx-auto px-6 md:px-12 py-24 md:py-40 text-center">
         <motion.h2

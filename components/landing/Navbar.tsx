@@ -12,12 +12,13 @@ type NavLink = {
 };
 
 const navLinks: NavLink[] = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Features", href: "/#features" },
+  // { label: "Dashboard", href: "/dashboard" },
+  // { label: "Features", href: "/#features" },
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "Contact", href: "/#contact" },
+  // { label: "How it works", href: "/#how-it-works" },
+  // { label: "Pricing", href: "/#pricing" },
+  // { label: "Get Started", href: "/register" },
 ];
 
 export default function Navbar() {
@@ -61,7 +62,7 @@ export default function Navbar() {
             })}
 
             <Link
-              href="/#contact"
+              href="/"
               className="text-[13px] tracking-wide bg-[#0B0B0B] text-white px-5 py-2.5 rounded-lg hover:bg-white hover:text-[#0B0B0B] border border-[#0B0B0B] transition-all duration-150"
             >
               Get Started

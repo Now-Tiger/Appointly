@@ -20,7 +20,7 @@ const fadeUp = {
 export default function DarkManifesto() {
   return (
     <section className="relative bg-[#0B0B0B] overflow-hidden">
-      <DotGrid dark />
+      <DotGrid dark fadeBottom />
 
       <div className="relative z-10 max-w-350 mx-auto px-6 md:px-12 py-24 md:py-40">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
