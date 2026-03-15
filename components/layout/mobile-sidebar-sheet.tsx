@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+
 import {
   LayoutDashboard,
   CalendarDays,
@@ -12,13 +13,14 @@ import {
   Settings,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+
 
 const MOBILE_NAV_ITEMS = [
   {
@@ -53,8 +55,8 @@ export function MobileSidebarSheet({ isOpen, onClose }: MobileSidebarSheetProps)
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-72 p-0">
-        <SheetHeader className="border-b border-border px-6 py-4">
+      <SheetContent side="left" className="w-72 p-0 dark:bg-gray-950">
+        <SheetHeader className="border-b border-border px-6 py-4 ">
           <SheetTitle className="font-soria text-lg font-normal text-left">
             appointly
           </SheetTitle>

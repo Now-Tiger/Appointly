@@ -59,12 +59,12 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex h-full w-60 shrink-0 flex-col border-r border-border bg-background">
+    <aside className="hidden lg:flex h-full w-60 shrink-0 flex-col border-r border-border dark:bg-gray-950">
       <nav className="flex-1 overflow-y-auto px-3 py-6">
         <div className="space-y-6">
           {NAV_GROUPS.map((group) => {
             const visibleItems = group.items.filter(
-              (item) => !("phase" in item) || item.phase <= CURRENT_PHASE
+              (item) => !("phase" in item) || item.phase <= CURRENT_PHASE,
             );
             if (visibleItems.length === 0) return null;
 
@@ -75,7 +75,9 @@ export function DashboardSidebar() {
                 </p>
                 <div className="space-y-0.5">
                   {visibleItems.map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                    const isActive =
+                      pathname === item.href ||
+                      pathname.startsWith(item.href + "/");
                     const Icon = item.icon;
 
                     return (
@@ -86,7 +88,7 @@ export function DashboardSidebar() {
                           "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                           isActive
                             ? "bg-muted text-foreground font-medium"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground",
                         )}
                       >
                         <Icon
@@ -94,7 +96,7 @@ export function DashboardSidebar() {
                             "h-4 w-4",
                             isActive
                               ? "text-foreground"
-                              : "text-muted-foreground"
+                              : "text-muted-foreground",
                           )}
                         />
                         {item.label}
