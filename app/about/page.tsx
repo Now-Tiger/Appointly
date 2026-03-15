@@ -53,7 +53,7 @@ export default function About() {
           <motion.div {...fadeUp} className="text-center mb-16">
             <div className="inline-block mb-6"></div>
             <h1
-              className="text-[#0B0B0B] font-bold leading-[0.92] tracking-[-0.04em] font-soria pb-1"
+              className="text-[#0B0B0B] font-bold leading-[0.92] tracking-[-0.04em] font-soria "
               style={{ fontSize: "clamp(4rem, 8vw, 6rem)" }}
             >
               Why Appointly?

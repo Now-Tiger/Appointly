@@ -13,12 +13,12 @@ export default function DashboardLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex h-svh flex-col bg-background">
+    <div className="flex h-svh flex-col bg-zinc-50 dark:bg-gray-950">
       <DashboardTopbar
         onMobileMenuToggle={() => setMobileMenuOpen(true)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden ">
         <DashboardSidebar />
         <MobileSidebarSheet
           isOpen={mobileMenuOpen}
