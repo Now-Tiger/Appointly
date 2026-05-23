@@ -73,14 +73,20 @@ export async function GET(req: Request): Promise<NextResponse> {
  */
 export async function POST(req: Request): Promise<NextResponse> {
   const APP_SECRET = process.env.WHATSAPP_APP_SECRET;
-  const signature  = req.headers.get('x-hub-signature-256');
+  const VOICE_AGENT_WEBHOOK = process.env.VOICE_AGENT_WEBHOOK!;
+
+  if (!APP_SECRET || !VOICE_AGENT_WEBHOOK) {
+    console.log('[Voice Agent] Missing environment variables');
+    return NextResponse.json({ error: 'Server misconfiguration'}, { status: 500 });
+  }
 
   try {
     // 1. Get/Read RAW BUFFER (not text)
-    const rawBuffer = Buffer.from(await req.arrayBuffer());
-    // console.log(rawBuffer);
+    const rawBody = await req.text();
+    // console.log(rawBody);
 
-    // 2. Security: Verify HMAC Signature
+    // 2. Security: Verify Meta Signature
+    const signature  = req.headers.get('x-hub-signature-256');
     if (!signature || !APP_SECRET) {
       console.warn('[Webhook POST] Missing signature or App Secret configuration.');
       return new NextResponse('Unauthorized', { status: 401 });
@@ -92,7 +98,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     // Compute expected signature
     const expectedSignature = crypto
       .createHmac('sha256', APP_SECRET)
-      .update(rawBuffer)
+      .update(rawBody)
       .digest('hex');
 
     // console.log('Incoming:', incomingSignature);
@@ -104,27 +110,61 @@ export async function POST(req: Request): Promise<NextResponse> {
       Buffer.from(expectedSignature, 'hex')
     );
 
-
     if (!isValid) {
       console.error('[Webhook] Signature mismatch');
       return new NextResponse('Invalid signature', { status: 401 });
     }
 
     // 3. Parse and extract payload
-    const body = JSON.parse(rawBuffer.toString('utf-8'));
-    const msg  = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const body = JSON.parse(rawBody);
+    // const msg  = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-    if (!msg) { 
+    // if (!msg) { 
+    //   return NextResponse.json({ status: 'ignored_event' });
+    // }
+
+    const value = body.entry?.[0]?.changes?.[0]?.value;
+
+    if (!value) { 
       return NextResponse.json({ status: 'ignored_event' });
     }
 
-    const from = msg.from;
-    const text = msg?.text?.body || 'Non-text message';
-    console.log(`[WhatsApp] Received from ${from}: '${text}'`);
+    // 4. Handle whatsapp message
+    if (value?.messages?.length > 0) {
+      const msg  = value.messages[0];
+      const from = msg.from;
+      const text = msg?.text?.body || 'Non-text message';
+      console.log(`[WhatsApp] Received from ${from}: '${text}'`);
 
-    // 4. Trigger AI/Business Logic
-    await handleIncomingMessage(from, text);
-    return NextResponse.json({ status: 'ok' });
+      // Trigger AI/Business Logic
+      // NOTE: Do NOT block webhook response for too long. 
+      // TODO: Move this to queue/background jobs.
+      await handleIncomingMessage(from, text);
+      return NextResponse.json({ status: 'ok' });
+    }
+
+    // 5. Handle whatsapp voice calls
+    if (value?.calls?.length > 0) {
+      console.log('[WhatsApp Call Event] Forwarding to voice agent');
+
+      // Forwarding row payload to python voice service
+      fetch(VOICE_AGENT_WEBHOOK, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-hub-signature-256': signature,
+        },
+        body: rawBody,
+      }).catch((error) => { console.error('[Voice Agent Forward Error]', error); });
+
+      return NextResponse.json({
+        status: 'call_forwarded',
+      });
+    }
+
+    // 6. Ignore other events
+    console.log('[Webhook] Ignored unsupported event');
+    return NextResponse.json({ status: 'ignored_event' });
 
   } catch (e) {
     console.error('[Webhook POST Exception]', e);
