@@ -65,3 +65,61 @@ export async function sendWhatsAppMessage(to: string, message: string): Promise<
     throw e;
   }
 }
+
+
+export async function sendWhatsAppImageMessage(to: string, imageUrl: string, caption: string): Promise<void> {
+
+  const {
+    WHATSAPP_ACCESS_TOKEN,
+    PHONE_NUMBER_ID,
+    FACEBOOK_GRAPH_ENDPOINT,
+    FACEBOOK_GRAPH_VERSION,
+  } = process.env;
+
+  if (!WHATSAPP_ACCESS_TOKEN || !PHONE_NUMBER_ID)
+    throw new Error('[WhatsApp Client] Missing API configuration.');
+
+  const sanitizedTo = to.replace(/\D/g, '');
+
+  const BASE_URL = FACEBOOK_GRAPH_ENDPOINT || 'https://graph.facebook.com';
+  const VERSION  = FACEBOOK_GRAPH_VERSION  || 'v25.0';
+
+  const url = `${BASE_URL}/${VERSION}/${PHONE_NUMBER_ID}/messages`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        recipient_type: 'individual',
+        to: sanitizedTo,
+
+        type: 'image',
+
+        image: {
+          link: imageUrl,
+          caption,
+        },
+      }),
+
+      signal: AbortSignal.timeout(10000),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('[WhatsApp Image Error]', JSON.stringify(data, null, 2));
+      throw new Error(`WhatsApp image message failed with ${response.status}`);
+    }
+
+    console.log(`[WhatsApp Client] Image message sent to ${sanitizedTo}`);
+
+  } catch (e) {
+    console.error('[WhatsApp Image Exception]', e);
+    throw e;
+  }
+}

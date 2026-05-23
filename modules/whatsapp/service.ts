@@ -1,5 +1,5 @@
 // modules/whatsapp/service.ts
-import { sendWhatsAppMessage } from "@/lib/whatsapp/client";
+import { sendWhatsAppMessage, sendWhatsAppImageMessage } from "@/lib/whatsapp/client";
 
 /**
  * Orchestrates business logic for incoming WhatsApp messages.
@@ -16,6 +16,7 @@ export async function handleIncomingMessage(from: string, text: string): Promise
   // 1. Normalize and Sanitize Input
   const sender = from.trim();
   const cleanText = text.trim().toLocaleLowerCase();
+  const baner = 'https://res.cloudinary.com/dq53c9400/image/upload/v1773570022/Funny_Pin_frg9g1.jpg';
 
   try {
     console.log(`[WhatsApp Service] Processing message from ${sender}: "${cleanText}"`);
@@ -26,7 +27,8 @@ export async function handleIncomingMessage(from: string, text: string): Promise
     // 2. Scalable Routing Logic
     // In a future phase, replace this with an LLM-based intent classifier
     if (cleanText === 'hi' || cleanText === 'hello') {
-      await sendWhatsAppMessage(sender, welcomeMsg);
+      // await sendWhatsAppMessage(sender, welcomeMsg);
+      await sendWhatsAppImageMessage(sender, baner, welcomeMsg);
       return;
     }
 
