@@ -147,19 +147,27 @@ export async function POST(req: Request): Promise<NextResponse> {
     if (value?.calls?.length > 0) {
       console.log('[WhatsApp Call Event] Forwarding to voice agent');
 
-      // Forwarding row payload to python voice service
-      fetch(VOICE_AGENT_WEBHOOK, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-hub-signature-256': signature,
-        },
-        body: rawBody,
-      }).catch((error) => { console.error('[Voice Agent Forward Error]', error); });
+      try {
+        // Forwarding row payload to python voice service
+        const response = await fetch(VOICE_AGENT_WEBHOOK, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-hub-signature-256': signature,
+          },
+          body: rawBody,
+        });
 
-      return NextResponse.json({
-        status: 'call_forwarded',
-      });
+        console.log('[Voice Agent Response]', response.status);
+        
+        const text = await response.text();
+        console.log('[Voice Agent Response]', text);
+
+        return NextResponse.json({ status: 'call_forwarded' });
+      } catch(e) {
+        console.error('[Voice Agent Forward Error]', e);
+        return NextResponse.json({ error: 'Voice agent unreachable' }, { status: 500 });
+      }
     }
 
     // 6. Ignore other events
